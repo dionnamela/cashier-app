@@ -118,6 +118,13 @@
                     <span class="flex-1 ms-3 whitespace-nowrap">Produk</span>
                 </a>
             </li>
+            <li>
+                <a wire:navigate href="/dashboard/product_categories"
+                    class="flex items-center p-2 rounded-lg {{ Request::is('dashboard/product_categories') ? 'bg-gray-500 text-white' : 'hover:bg-gray-200' }} group">
+                    <i class="bi bi-bag-check"></i>
+                    <span class="flex-1 ms-3 whitespace-nowrap">Produk</span>
+                </a>
+            </li>
 
         </ul>
     </div>
