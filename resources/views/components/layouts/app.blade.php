@@ -4,7 +4,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -37,8 +37,7 @@
                 </button>
                 <a href="https://flowbite.com" class="flex ms-2 md:me-24">
                     <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 me-3" alt="FlowBite Logo" />
-                    <span
-                        class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap">Flowbite</span>
+                    <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap">Flowbite</span>
                 </a>
             </div>
 
@@ -66,24 +65,30 @@
                         </div>
                         <ul class="py-1" role="none">
                             <li>
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     role="menuitem">Dashboard</a>
                             </li>
                             <li>
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     role="menuitem">Settings</a>
                             </li>
                             <li>
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     role="menuitem">Earnings</a>
                             </li>
                             <li>
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                    role="menuitem">Sign out</a>
+                                <form action="{{ route('logout') }}" method="POST" id="logout-form">
+                                    @csrf
+
+                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="#"
+                                        onclick="event.preventDefault(); 
+                                        if (confirm('Apakah Anda yakin ingin logout?')) {
+                                            this.closest('form').submit();
+                                        }">
+                                        Logout
+                                    </a>
+                                </form>
+
                             </li>
                         </ul>
                     </div>
