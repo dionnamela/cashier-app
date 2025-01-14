@@ -106,14 +106,14 @@
         <ul class="space-y-2 font-medium">
             <li>
                 <a wire:navigate href="/dashboard"
-                    class="flex items-center p-2 rounded-lg {{ Request::is('dashboard') ? 'bg-gray-500 text-white' : '' }} hover:bg-gray-200 group">
+                    class="flex items-center p-2 rounded-lg {{ Request::is('dashboard') ? 'bg-gray-500 text-white' : 'hover:bg-gray-200' }} group">
                     <i class="bi bi-speedometer"></i>
                     <span class="flex-1 ms-3 whitespace-nowrap">Dashboard</span>
                 </a>
             </li>
             <li>
                 <a wire:navigate href="/dashboard/products"
-                    class="flex items-center p-2 rounded-lg {{ Request::is('dashboard/products') ? 'bg-gray-500 text-white' : '' }} hover:bg-gray-200 group">
+                    class="flex items-center p-2 rounded-lg {{ Request::is('dashboard/products') ? 'bg-gray-500 text-white' : 'hover:bg-gray-200' }} group">
                     <i class="bi bi-bag-check"></i>
                     <span class="flex-1 ms-3 whitespace-nowrap">Produk</span>
                 </a>
