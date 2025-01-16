@@ -8,4 +8,5 @@ class ProductCategories extends Model
 {
     protected $guarded = ['id'];
     protected $table = 'product_categories';
+    protected $fillable = ['name'];
 }
