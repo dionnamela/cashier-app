@@ -16,7 +16,7 @@ class Product extends Component
     public $name,$sku, $image, $price, $description, $stock, $unit;
 
     // Update
-    public $productId, $nameUpdate, $skuUpdate, $imageEditPreview, $imageUpdate, $priceUpdate, $descriptionUpdate, $stockUpdate, $unitUpdate;
+    public $productId, $nameUpdate, $skuUpdate, $imageUpdate, $priceUpdate, $descriptionUpdate, $stockUpdate, $unitUpdate;
 
     // Detail
     public $selectedProduct = null;
@@ -70,7 +70,7 @@ class Product extends Component
 
     public function resetFormEdit()
     {
-        $this->reset(['nameUpdate', 'skuUpdate', 'imageEditPreview', 'priceUpdate', 'descriptionUpdate', 'stockUpdate', 'unitUpdate']);
+        $this->reset(['nameUpdate', 'priceUpdate', 'descriptionUpdate', 'stockUpdate', 'unitUpdate']);
     }
 
     public function store()
@@ -122,7 +122,7 @@ class Product extends Component
         $this->validate([
             'nameUpdate' => 'required|string|max:30',
             'skuUpdate' => 'required|string|max:30',
-            'imageEditPreview' => 'nullable|image|max:5120',
+            'imageUpdate' => 'nullable|image|max:5120',
             'priceUpdate' => 'required|numeric|min:0',
             'descriptionUpdate' => 'required|string',
             'stockUpdate' => 'required|numeric|min:0',
@@ -132,8 +132,8 @@ class Product extends Component
         $product = ModelsProduct::findOrFail($this->productId);
         $oldImagePath = $product->imageUpdate;
     
-        if ($this->imageEditPreview) {
-            $newImagePath = $this->imageEditPreview->store('product-image', 'public');
+        if ($this->imageUpdate) {
+            $newImagePath = $this->imageUpdate->store('product-image', 'public');
     
             if ($oldImagePath && file_exists(public_path('storage/' . $oldImagePath))) {
                 unlink(public_path('storage/' . $oldImagePath));
