@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('image');
             $table->decimal('price');
             $table->longText('description');
+            $table->integer('stock')->default(0);
+            $table->string('unit');
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
         });
