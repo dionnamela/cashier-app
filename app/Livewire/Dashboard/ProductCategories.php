@@ -9,26 +9,24 @@ use RealRashid\SweetAlert\Facades\Alert;
 class ProductCategories extends Component
 {
     public $productCategories;
-    public $name;
-    public $search = '';
-    public $loading = true;  // Properti loading
-
-    public function mount()
-    {
-
-
-        // Mengambil data kategori produk
-        $this->productCategories = ModelProductCategories::all();
-
-        // Setelah data dimuat, set loading ke false
-        $this->loading = false;
-    }
+    public $categoryId; // ID kategori yang akan diedit
+    public $name; // Nama kategori yang akan diedit
 
     public function store()
     {
+        // Validasi input dengan pesan error kustom
+        $this->validate([
+            'name' => 'required|unique:product_categories,name',
+        ], [
+            'name.required' => 'Nama kategori produk wajib diisi.',
+            'name.unique' => 'Nama kategori produk sudah ada. Silakan masukkan nama lain.',
+        ]);
+
+        sleep(1);
+
         // Menyimpan kategori produk
         ModelProductCategories::create([
-            'name' => $this->name
+            'name' => $this->name,
         ]);
 
         // Reset input setelah penyimpanan
@@ -40,6 +38,8 @@ class ProductCategories extends Component
         // Dispatch custom event untuk memicu aksi JavaScript
         $this->dispatch('addedSuccess');
     }
+
+
 
     public function render()
     {
