@@ -227,7 +227,7 @@
                     Tambah Produk
                 </h3>
 
-                <button type="button" id="closeButtonAddModal">
+                <button type="button" class="closeButtonAddModal" >
                     <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd"
@@ -359,7 +359,7 @@
                     </div>
                 </div>
                 <div class="flex items-center justify-center">
-                    <button wire:loading.remove wire:target='store' wire:click='store' type="submit"
+                    <button wire:loading.remove wire:target='store' type="submit"
                         class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
                         Simpan
                     </button>
@@ -553,40 +553,6 @@
 
 
 
-<div id="deleteModal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 flex items-center justify-center w-full h-full" wire:ignore.self>
-    <div class="relative w-full max-w-md max-h-full">
-        <!-- Modal content -->
-        <div class="relative p-4 bg-white rounded-lg shadow sm:p-5">
-            <!-- Modal header -->
-            <div class="flex justify-between items-center pb-4 mb-4 rounded-t sm:mb-5">
-                <button type="button" class="closeButtonDeleteModal">
-                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                    </svg>
-                    <span class="sr-only">Close modal</span>
-                </button>
-            </div>
-
-            <div class="p-4 md:p-5 text-center">
-                <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-                </svg>
-                <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Apakah Anda yakin ingin menghapus produk <b>{{ $nameUpdate }}</b>?</h3>
-                
-                <button wire:loading.remove wire:click='delete' type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
-                   Hapus
-                </button>
-                <button disabled wire:loading wire:target='delete' type="button" class="text-white bg-red-300 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
-                    Menghapus..
-                </button>
-
-                <button type="button" class="closeButtonDeleteModal py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-                    Batal
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
 
 
 
@@ -595,26 +561,38 @@
 {{-- Script modal tambah --}}
 <script>
     $(document).ready(function () {
-
-        window.addEventListener('addedSuccess', function () {
-            const modal = new Modal(document.getElementById('addModal'));
-            modal.hide(); // Menutup modal setelah data berhasil ditambahkan
-            @this.call('resetForm'); // Mereset form di Livewire
-        });
-
-        // Pastikan tombol buka modal tetap bisa membuka modal
-        $('#addProductButton').on('click', function () {
-            const modal = new Modal(document.getElementById('addModal'));
-            modal.show(); // Menampilkan modal saat tombol ditekan
-        });
-
-        // Event listener untuk menutup modal dan mereset form ketika tombol close ditekan
-        $('#closeButtonAddModal').on('click', function () {
-            const modal = new Modal(document.getElementById('addModal'));
+    // Menangkap event Livewire dan menutup modal
+    window.addEventListener('addedSuccess', () => {
+        const modalElement = document.getElementById('addModal');
+        if (modalElement) {
+            const modal = new Modal(modalElement);
             modal.hide(); // Menutup modal
-            @this.call('resetForm'); // Mereset form di Livewire
-        });
+        }
+
+        @this.call('resetForm'); // Mereset form di Livewire
     });
+
+    // Tombol untuk membuka modal
+    $('#addProductButton').on('click', function () {
+        const modalElement = document.getElementById('addModal');
+        if (modalElement) {
+            const modal = new Modal(modalElement);
+            modal.show(); // Membuka modal
+        }
+    });
+
+    // Tombol untuk menutup modal dan mereset form
+    $('.closeButtonAddModal').on('click', function () {
+        const modalElement = document.getElementById('addModal');
+        if (modalElement) {
+            const modal = new Modal(modalElement);
+            modal.hide(); // Menutup modal
+        }
+
+        @this.call('resetForm'); // Mereset form di Livewire
+    });
+});
+
 
 </script>
 
@@ -674,9 +652,25 @@
                     }
                 }, 200);
             },
+
+            resetPreview() {
+                this.imagePreview = null;
+                this.fileName = '';
+                this.fileSize = '';
+                this.error = null;
+                this.uploading = false;
+                this.progress = 0;
+            },
+
+            init() {
+                window.addEventListener('addedSuccess', () => {
+                    this.resetPreview(); // Reset preview image ketika event `addedSuccess` ditangkap
+                });
+            },
         };
     }
 </script>
+
 
 
 {{-- Script modal edit --}}
