@@ -112,25 +112,41 @@
         <ul class="space-y-2 font-medium">
             <li>
                 <a wire:navigate href="/dashboard"
-                    class="flex items-center p-2 rounded-lg {{ Request::is('dashboard') ? 'bg-gray-500 text-white' : 'hover:bg-gray-200' }} group">
+                    class="flex items-center p-2 rounded-lg {{ Request::is('dashboard') ? 'bg-purple-300 text-dark' : 'hover:bg-gray-200' }} group">
                     <i class="bi bi-speedometer"></i>
                     <span class="flex-1 ms-3 whitespace-nowrap">Dashboard</span>
                 </a>
             </li>
+
+
             <li>
-                <a wire:navigate href="/dashboard/products"
-                    class="flex items-center p-2 rounded-lg {{ Request::is('dashboard/products') ? 'bg-gray-500 text-white' : 'hover:bg-gray-200' }} group">
+                <button 
+                    type="button" 
+                    class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group {{ Request::is('dashboard/products') || Request::is('dashboard/product_categories') ? 'bg-gray-200' : 'hover:bg-gray-200' }}" 
+                    aria-controls="dropdown" 
+                    data-collapse-toggle="dropdown"
+                    aria-expanded="{{ Request::is('dashboard/products') || Request::is('dashboard/product_categories') ? 'true' : 'false' }}">
                     <i class="bi bi-bag-check"></i>
-                    <span class="flex-1 ms-3 whitespace-nowrap">Produk</span>
-                </a>
+                    <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Produk</span>
+                    <i class="bi bi-caret-down-fill"></i>
+                </button>
+                <ul 
+                    id="dropdown" 
+                    class="{{ Request::is('dashboard/products') || Request::is('dashboard/product_categories') ? '' : 'hidden' }} py-2 space-y-2">
+                    <a wire:navigate href="/dashboard/products"
+                        class="flex items-center p-2 rounded-lg {{ Request::is('dashboard/products') ? 'bg-purple-300 text-dark' : 'hover:bg-gray-200' }} group">
+                        <i class="bi bi-arrow-return-right"></i>
+                        <span class="flex-1 ms-3 whitespace-nowrap">Master Produk</span>
+                    </a>
+                    <a wire:navigate href="/dashboard/product_categories"
+                        class="flex items-center p-2 rounded-lg {{ Request::is('dashboard/product_categories') ? 'bg-purple-300 text-dark' : 'hover:bg-gray-200' }} group">
+                        <i class="bi bi-arrow-return-right"></i>
+                        <span class="flex-1 ms-3 whitespace-nowrap">Produk Kategori</span>
+                    </a>
+                </ul>
             </li>
-            <li>
-                <a wire:navigate href="/dashboard/product_categories"
-                    class="flex items-center p-2 rounded-lg {{ Request::is('dashboard/product_categories') ? 'bg-gray-500 text-white' : 'hover:bg-gray-200' }} group">
-                    <i class="bi bi-bag-check"></i>
-                    <span class="flex-1 ms-3 whitespace-nowrap">Produk</span>
-                </a>
-            </li>
+            
+
 
         </ul>
     </div>
