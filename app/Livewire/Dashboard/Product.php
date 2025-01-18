@@ -30,7 +30,11 @@ class Product extends Component
     public $limit = 8; 
     public $loaded = false;
 
-    protected $listeners = ['productUpdated' => 'loadInitialProducts'];
+    protected $listeners = [
+        'productUpdated' => 'loadInitialProducts',
+        'deleteConfirmed' => 'delete',
+    ];
+    
 
     public function mount() 
     {
@@ -159,15 +163,14 @@ class Product extends Component
     }
 
 
-    public function deleteModal($id)
+    public function deleteConfirmation($id)
     {
         $product = ModelsProduct::findOrFail($id);
 
         $this->productId = $product->id;
-        $this->nameUpdate = $product->name;
-
-        $this->dispatch('showDeleteModal');
+        $this->dispatch('showDeleteConfirmation');
     }
+
 
     public function delete()
     {

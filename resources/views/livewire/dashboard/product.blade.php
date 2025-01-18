@@ -18,8 +18,7 @@
                 /* Sesuai dengan height gambar (h-10) */
                 border-radius: 50%;
                 /* Membuat bentuk lingkaran */
-                background: linear-gradient(90deg, #e0e0e0 25%, #e0e0e0 50%, #e0e0e0 75%);
-                transition: opacity 0.3s ease-in-out;
+              
             }
 
         </style>
@@ -159,7 +158,7 @@
                             Ubah</button>
                     </div>
                     <div>
-                        <button wire:click="deleteModal({{ $product->id }})"
+                        <button wire:click="deleteConfirmation({{ $product->id }})"
                             class="mb-2 bg-red-100 hover:bg-red-200 text-red-800 text-xs font-semibold me-2 px-2.5 py-0.5 rounded border border-red-400 inline-flex items-center justify-center">
                             Delete
                         </button>
@@ -796,25 +795,29 @@
 
 {{-- Script modal delete --}}
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const modalElement = document.getElementById('deleteModal');
-        const modal = new Modal(modalElement);
-
-        // Event untuk membuka modal
-        window.addEventListener('showDeleteModal', function () {
-            modal.show();
+    window.addEventListener('showDeleteConfirmation', event => {
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Produk ini akan dihapus?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Livewire.dispatch('deleteConfirmed');
+            }
         });
-
-        // Event untuk menutup modal
-        window.addEventListener('deleteSuccess', function () {
-            modal.hide();
-        });
-
-        // Tombol close modal
-        document.querySelectorAll('.closeButtonDeleteModal').forEach(button => {
-            button.addEventListener('click', function () {
-                modal.hide();
-            });
+    });
+    window.addEventListener('deleteSuccess', event => {
+        Swal.fire({
+            title: 'Berhasil',
+            text: 'Kategori produk berhasil dihapus.',
+            icon: 'success',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#1E40AF', // Mengatur warna tombol menjadi biru
         });
     });
 </script>
