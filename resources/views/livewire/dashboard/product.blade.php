@@ -159,9 +159,10 @@
                             Ubah</button>
                     </div>
                     <div>
-                        <button wire:loading.remove wire:target='loadInitialProducts' wire:click="deleteModal({{ $product->id }})"
-                            class="mb-2 bg-red-100 hover:bg-red-200 text-red-800 text-xs font-semibold me-2 px-2.5 py-0.5 rounded  border border-red-400 inline-flex items-center justify-center">
-                            Delete</button>
+                        <button wire:click="deleteModal({{ $product->id }})"
+                            class="mb-2 bg-red-100 hover:bg-red-200 text-red-800 text-xs font-semibold me-2 px-2.5 py-0.5 rounded border border-red-400 inline-flex items-center justify-center">
+                            Delete
+                        </button>
                     </div>
                     <div>
                         <button
@@ -407,13 +408,13 @@
                 </button>
             </div>
 
-            @if ($errors->any())
+            {{-- @if ($errors->any())
                 <ul class="text-red-500">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
-            @endif
+            @endif --}}
             <!-- Modal body -->
             <form wire:submit.prevent="update">
                 <div class="grid gap-4 mb-4 sm:grid-cols-2" style="max-height: 60vh; overflow-y: auto;">
@@ -427,7 +428,7 @@
                     <div>
                         <label for="skuUpdate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">SKU</label>
                         <input wire:model='skuUpdate' type="text" name="skuUpdate" id="skuUpdate"
-                            class="bg-gray-50 border border-gray-300 text-grUpdateay-900 text-sm Updaterounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             placeholder="Masukan SKU">
                         @error('skuUpdate') <span class="text-red-500 text-sm">{{ $message }} @enderror
                     </div>
@@ -459,7 +460,7 @@
                         @error('unitUpdate') <span class="text-red-500 text-sm">{{ $message }} @enderror
                     </div>
 
-                    <div class="sm:col-span-2" x-data="imageUploader()">
+                    <div class="sm:col-span-2" x-data="imageUploader()" x-init="init()">
                         <!-- Input Upload -->
                         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="image">Upload Gambar</label>
                         <input wire:model='imageUpdate'
@@ -468,10 +469,11 @@
                             class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                             accept=".png,.jpg,.jpeg,.gif,.svg"
                             x-on:change="previewImage($event)"
+                            x-ref="fileInput"
                         >
-                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="image">SVG, PNG, JPG or GIF (Max: 5MB)</p>
+                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">SVG, PNG, JPG or GIF (Max: 5MB)</p>
                     
-                        <!-- Progress Container -->
+                         <!-- Progress Container -->
                         <div x-show="uploading" x-transition:enter="transition ease-out duration-300" class="w-full">
                             <div class="flex justify-between mb-1">
                                 <span class="text-sm font-medium text-gray-700 dark:text-gray-200">Upload Progress</span>
@@ -489,36 +491,42 @@
                                 ></div>
                             </div>
                         </div>
-                    
+
                         <!-- Error Message -->
-                        @error('image') <span class="text-red-500 text-sm">{{ $message }} @enderror
+                        @error('imageUpdate') <span class="text-red-500 text-sm">{{ $message }} @enderror
                         <template x-if="error">
                             <span class="text-red-500 text-sm" x-text="error"></span>
                         </template>
                     
-                        <!-- Image Preview -->
-                        <template x-if="imagePreview">
+                        <!-- Tampilkan gambar preview atau gambar lama -->
+                        <template x-if="imagePreview || existingImage">
                             <div class="flex justify-center items-center mt-2">
                                 <div class="flex flex-col items-center">
                                     <!-- Preview Image -->
-                                    <img :src="imagePreview" alt="Preview" class="max-w-full h-64 rounded-lg object-cover border-2 border-gray-300 border-dashed">
+                                    <img 
+                                        :src="imagePreview || '{{ asset('storage') }}/' + existingImage" 
+                                        alt="Preview" 
+                                        class="max-w-full h-64 rounded-lg object-cover border-2 border-gray-300 border-dashed">
+                                    
                                     <!-- File Name -->
                                     <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
-                                        <span class="font-semibold" x-text="fileName"></span>
+                                        <span class="font-semibold" x-text="fileName || (existingImage ? existingImage.split('/').pop() : '')"></span>
                                         <span x-text="fileSize"></span>
                                     </p>
                                 </div>
                             </div>
-                        </template>
+                        </template>         
+
                     </div>
+                    
 
                     <div class="sm:col-span-2">
-                        <label for="description"
+                        <label for="descriptionUpdate"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
-                        <textarea wire:model='description' id="description" rows="4"
+                        <textarea wire:model='descriptionUpdate' id="descriptionUpdate" rows="4"
                             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             placeholder="Masukan deskripsi disini"></textarea>
-                        @error('description') <span class="text-red-500 text-sm">{{ $message }} @enderror
+                        @error('descriptionUpdate') <span class="text-red-500 text-sm">{{ $message }} @enderror
                     </div>
                 </div>
                 <div class="flex items-center justify-center">
@@ -546,21 +554,15 @@
 
 
 
-{{-- Modal Delete --}}
-<div id="deleteModal" tabindex="-1" aria-hidden="true" data-modal-backdrop="deleteModal"
-    class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full"
-    wire:ignore.self>
+<div id="deleteModal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 flex items-center justify-center w-full h-full" wire:ignore.self>
     <div class="relative w-full max-w-md max-h-full">
         <!-- Modal content -->
         <div class="relative p-4 bg-white rounded-lg shadow sm:p-5">
             <!-- Modal header -->
             <div class="flex justify-between items-center pb-4 mb-4 rounded-t sm:mb-5">
                 <button type="button" class="closeButtonDeleteModal">
-                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clip-rule="evenodd"></path>
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                     </svg>
                     <span class="sr-only">Close modal</span>
                 </button>
@@ -577,15 +579,16 @@
                 </button>
                 <button disabled wire:loading wire:target='delete' type="button" class="text-white bg-red-300 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
                     Menghapus..
-                 </button>
+                </button>
 
-                <button  data-modal-hide="deleteModal" type="button" class="closeButtonDeleteModal py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                <button type="button" class="closeButtonDeleteModal py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                     Batal
                 </button>
             </div>
         </div>
     </div>
 </div>
+
 
 
 
@@ -616,7 +619,7 @@
 
 </script>
 
-{{-- Alpine FileUpload --}}
+{{-- Alpine FileUpload Form Add --}}
 <script>
     function imageUploader() {
         return {
@@ -670,30 +673,65 @@
                         clearInterval(interval);
                         this.uploading = false;
                     }
-                }, 150);
+                }, 200);
             },
         };
     }
 </script>
 
+
+{{-- Script modal edit --}}
+<script>
+    $(document).ready(function () {
+
+        window.addEventListener('updatedSuccess', function () {
+            const modal = new Modal(document.getElementById('editModal'));
+            modal.hide(); // Menutup modal setelah data berhasil ditambahkan
+            @this.call('resetFormEdit');
+        });
+
+
+        window.addEventListener('showEditModal', function () {
+            const modal = new Modal(document.getElementById('editModal'));
+            modal.show(); // Menampilkan modal saat tombol ditekan
+        });
+
+
+        // Event listener untuk menutup modal dan mereset form ketika tombol close ditekan
+        $('#closeButtonEditModal').on('click', function () {
+            const modal = new Modal(document.getElementById('editModal'));
+            modal.hide(); // Menutup modal
+            @this.call('resetFormEdit');
+        });
+
+    });
+
+</script>
+
+{{-- Alpine FileUpload From Update --}}
 <script>
     function imageUploader() {
         return {
-            imagePreview: @entangle('imagePreview') ?? null,  // Gunakan entangle untuk bind dengan Livewire
-            fileName: @entangle('fileName') ?? '', 
-            fileSize: @entangle('fileSize') ?? '',
+            imagePreview:  null, 
+            fileName: '',
+            fileSize: '',
             error: null,
             uploading: false,
             progress: 0,
-            existingImage: @entangle('existingImage') ?? null, // Entangle existing image if available
+            existingImage: @entangle('currentImage') ?? null,  // Bind gambar yang sudah ada
             hasImage: false,
 
             init() {
                 // Jika ada gambar yang sudah ada (misalnya saat edit), tampilkan gambar tersebut
                 if (this.existingImage) {
-                    this.imagePreview = this.existingImage;
                     this.hasImage = true;
                 }
+
+                // Listener untuk event updatedSuccess dari Livewire
+                Livewire.on('updatedSuccess', () => {
+                    this.clearImagePreview(); // Panggil untuk clear preview
+                    this.existingImage = @this.get('currentImage'); // Sinkronkan gambar baru dari Livewire
+                });
             },
 
             previewImage(event) {
@@ -729,6 +767,7 @@
                 this.simulateProgress();
             },
 
+
             simulateProgress() {
                 this.uploading = true;
                 this.progress = 0;
@@ -740,76 +779,47 @@
                         clearInterval(interval);
                         this.uploading = false;
                     }
-                }, 150);
+                }, 200);
             },
 
-            removeImage() {
-                // Remove selected image and reset fields
+            // Method to clear image preview
+            clearImagePreview() {
                 this.imagePreview = null;
                 this.fileName = '';
                 this.fileSize = '';
                 this.hasImage = false;
-                this.existingImage = null;
-            },
+            }
         };
     }
 </script>
 
-{{-- Script modal edit --}}
-<script>
-    $(document).ready(function () {
-
-        window.addEventListener('updatedSuccess', function () {
-            const modal = new Modal(document.getElementById('editModal'));
-            modal.hide(); // Menutup modal setelah data berhasil ditambahkan
-
-        });
-
-
-        window.addEventListener('showEditModal', function () {
-            const modal = new Modal(document.getElementById('editModal'));
-            modal.show(); // Menampilkan modal saat tombol ditekan
-        });
-
-
-        // Event listener untuk menutup modal dan mereset form ketika tombol close ditekan
-        $('#closeButtonEditModal').on('click', function () {
-            const modal = new Modal(document.getElementById('editModal'));
-            modal.hide(); // Menutup modal
-            @this.call('resetFormEdit');
-        });
-
-    });
-
-</script>
 
 {{-- Script modal delete --}}
 <script>
-    $(document).ready(function () {
+    document.addEventListener('DOMContentLoaded', function () {
+        const modalElement = document.getElementById('deleteModal');
+        const modal = new Modal(modalElement);
 
-        window.addEventListener('deleteSuccess', function () {
-            const modal = new Modal(document.getElementById('deleteModal'));
-            modal.hide(); // Menutup modal setelah data berhasil ditambahkan
-
-        });
-
-
+        // Event untuk membuka modal
         window.addEventListener('showDeleteModal', function () {
-            const modal = new Modal(document.getElementById('deleteModal'));
-            modal.show(); // Menampilkan modal saat tombol ditekan
+            modal.show();
         });
 
-
-        // Event listener untuk menutup modal dan mereset form ketika tombol close ditekan
-        $('.closeButtonDeleteModal').on('click', function () {
-            const modal = new Modal(document.getElementById('deleteModal'));
-            modal.hide(); // Menutup modal
-
+        // Event untuk menutup modal
+        window.addEventListener('deleteSuccess', function () {
+            modal.hide();
         });
 
+        // Tombol close modal
+        document.querySelectorAll('.closeButtonDeleteModal').forEach(button => {
+            button.addEventListener('click', function () {
+                modal.hide();
+            });
+        });
     });
-
 </script>
+
+
 
 {{-- Sweet alert,added success --}}
 <script>
