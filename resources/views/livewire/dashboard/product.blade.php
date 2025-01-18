@@ -159,9 +159,10 @@
                             Ubah</button>
                     </div>
                     <div>
-                        <button wire:loading.remove wire:target='loadInitialProducts' wire:click="deleteModal({{ $product->id }})"
-                            class="mb-2 bg-red-100 hover:bg-red-200 text-red-800 text-xs font-semibold me-2 px-2.5 py-0.5 rounded  border border-red-400 inline-flex items-center justify-center">
-                            Delete</button>
+                        <button wire:click="deleteModal({{ $product->id }})"
+                            class="mb-2 bg-red-100 hover:bg-red-200 text-red-800 text-xs font-semibold me-2 px-2.5 py-0.5 rounded border border-red-400 inline-flex items-center justify-center">
+                            Delete
+                        </button>
                     </div>
                     <div>
                         <button
@@ -407,13 +408,13 @@
                 </button>
             </div>
 
-            @if ($errors->any())
+            {{-- @if ($errors->any())
                 <ul class="text-red-500">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
-            @endif
+            @endif --}}
             <!-- Modal body -->
             <form wire:submit.prevent="update">
                 <div class="grid gap-4 mb-4 sm:grid-cols-2" style="max-height: 60vh; overflow-y: auto;">
@@ -497,43 +498,25 @@
                             <span class="text-red-500 text-sm" x-text="error"></span>
                         </template>
                     
-                        <!-- Image Preview -->
-                        <template x-if="imagePreview">
+                        <!-- Tampilkan gambar preview atau gambar lama -->
+                        <template x-if="imagePreview || existingImage">
                             <div class="flex justify-center items-center mt-2">
                                 <div class="flex flex-col items-center">
                                     <!-- Preview Image -->
-                                    <img :src="imagePreview" alt="Preview" class="max-w-full h-64 rounded-lg object-cover border-2 border-gray-300 border-dashed">
+                                    <img 
+                                        :src="imagePreview || '{{ asset('storage') }}/' + existingImage" 
+                                        alt="Preview" 
+                                        class="max-w-full h-64 rounded-lg object-cover border-2 border-gray-300 border-dashed">
+                                    
                                     <!-- File Name -->
                                     <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
-                                        <span class="font-semibold" x-text="fileName"></span>
+                                        <span class="font-semibold" x-text="fileName || (existingImage ? existingImage.split('/').pop() : '')"></span>
                                         <span x-text="fileSize"></span>
                                     </p>
                                 </div>
                             </div>
-                        </template>
-                    
-                        <!-- Tampilkan gambar lama jika ada -->
-                        @if ($imageUpdate)
-                            <div class="flex justify-center items-center mt-2">
-                                <div class="flex flex-col items-center">
-                                    <!-- Preview Image -->
-                                    <img src="{{ asset('storage/' . $imageUpdate) }}" alt="Preview"
-                                        class="max-w-full h-64 rounded-lg object-cover border-2 border-gray-300 border-dashed">
-                                    <!-- File Name -->
-                                    <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
-                                        <span class="font-semibold">{{ basename($imageUpdate) }}</span>
-                                        <span>
-                                            @php
-                                                $filePath = storage_path('app/public/' . $imageUpdate);
-                                            @endphp
-                                            @if (file_exists($filePath))
-                                                <span>{{ number_format(filesize($filePath) / 1024, 2) }} KB</span>
-                                            @endif
-                                        </span>
-                                    </p>
-                                </div>
-                            </div>
-                        @endif
+                        </template>         
+
                     </div>
                     
 
@@ -571,21 +554,15 @@
 
 
 
-{{-- Modal Delete --}}
-<div id="deleteModal" tabindex="-1" aria-hidden="true" data-modal-backdrop="deleteModal"
-    class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full"
-    wire:ignore.self>
+<div id="deleteModal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 flex items-center justify-center w-full h-full" wire:ignore.self>
     <div class="relative w-full max-w-md max-h-full">
         <!-- Modal content -->
         <div class="relative p-4 bg-white rounded-lg shadow sm:p-5">
             <!-- Modal header -->
             <div class="flex justify-between items-center pb-4 mb-4 rounded-t sm:mb-5">
                 <button type="button" class="closeButtonDeleteModal">
-                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clip-rule="evenodd"></path>
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                     </svg>
                     <span class="sr-only">Close modal</span>
                 </button>
@@ -602,15 +579,16 @@
                 </button>
                 <button disabled wire:loading wire:target='delete' type="button" class="text-white bg-red-300 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
                     Menghapus..
-                 </button>
+                </button>
 
-                <button  data-modal-hide="deleteModal" type="button" class="closeButtonDeleteModal py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                <button type="button" class="closeButtonDeleteModal py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                     Batal
                 </button>
             </div>
         </div>
     </div>
 </div>
+
 
 
 
@@ -695,35 +673,64 @@
                         clearInterval(interval);
                         this.uploading = false;
                     }
-                }, 150);
+                }, 200);
             },
         };
     }
+</script>
+
+
+{{-- Script modal edit --}}
+<script>
+    $(document).ready(function () {
+
+        window.addEventListener('updatedSuccess', function () {
+            const modal = new Modal(document.getElementById('editModal'));
+            modal.hide(); // Menutup modal setelah data berhasil ditambahkan
+            @this.call('resetFormEdit');
+        });
+
+
+        window.addEventListener('showEditModal', function () {
+            const modal = new Modal(document.getElementById('editModal'));
+            modal.show(); // Menampilkan modal saat tombol ditekan
+        });
+
+
+        // Event listener untuk menutup modal dan mereset form ketika tombol close ditekan
+        $('#closeButtonEditModal').on('click', function () {
+            const modal = new Modal(document.getElementById('editModal'));
+            modal.hide(); // Menutup modal
+            @this.call('resetFormEdit');
+        });
+
+    });
+
 </script>
 
 {{-- Alpine FileUpload From Update --}}
 <script>
     function imageUploader() {
         return {
-            imagePreview: @entangle('imagePreview') ?? null,  // Bind dengan Livewire
-            fileName: @entangle('fileName') ?? '',
-            fileSize: @entangle('fileSize') ?? '',
+            imagePreview:  null, 
+            fileName: '',
+            fileSize: '',
             error: null,
             uploading: false,
             progress: 0,
-            existingImage: @entangle('existingImage') ?? null,  // Bind gambar yang sudah ada
+            existingImage: @entangle('currentImage') ?? null,  // Bind gambar yang sudah ada
             hasImage: false,
 
             init() {
                 // Jika ada gambar yang sudah ada (misalnya saat edit), tampilkan gambar tersebut
                 if (this.existingImage) {
-                    this.imagePreview = this.existingImage;
                     this.hasImage = true;
                 }
 
                 // Listener untuk event updatedSuccess dari Livewire
                 Livewire.on('updatedSuccess', () => {
                     this.clearImagePreview(); // Panggil untuk clear preview
+                    this.existingImage = @this.get('currentImage'); // Sinkronkan gambar baru dari Livewire
                 });
             },
 
@@ -760,6 +767,7 @@
                 this.simulateProgress();
             },
 
+
             simulateProgress() {
                 this.uploading = true;
                 this.progress = 0;
@@ -771,16 +779,7 @@
                         clearInterval(interval);
                         this.uploading = false;
                     }
-                }, 150);
-            },
-
-            removeImage() {
-                // Remove selected image and reset fields
-                this.imagePreview = null;
-                this.fileName = '';
-                this.fileSize = '';
-                this.hasImage = false;
-                this.existingImage = null;
+                }, 200);
             },
 
             // Method to clear image preview
@@ -795,63 +794,32 @@
 </script>
 
 
-
-
-{{-- Script modal edit --}}
-<script>
-    $(document).ready(function () {
-
-        window.addEventListener('updatedSuccess', function () {
-            const modal = new Modal(document.getElementById('editModal'));
-            modal.hide(); // Menutup modal setelah data berhasil ditambahkan
-            @this.call('resetFormEdit');
-        });
-
-
-        window.addEventListener('showEditModal', function () {
-            const modal = new Modal(document.getElementById('editModal'));
-            modal.show(); // Menampilkan modal saat tombol ditekan
-        });
-
-
-        // Event listener untuk menutup modal dan mereset form ketika tombol close ditekan
-        $('#closeButtonEditModal').on('click', function () {
-            const modal = new Modal(document.getElementById('editModal'));
-            modal.hide(); // Menutup modal
-            @this.call('resetFormEdit');
-        });
-
-    });
-
-</script>
-
 {{-- Script modal delete --}}
 <script>
-    $(document).ready(function () {
+    document.addEventListener('DOMContentLoaded', function () {
+        const modalElement = document.getElementById('deleteModal');
+        const modal = new Modal(modalElement);
 
-        window.addEventListener('deleteSuccess', function () {
-            const modal = new Modal(document.getElementById('deleteModal'));
-            modal.hide(); // Menutup modal setelah data berhasil ditambahkan
-
-        });
-
-
+        // Event untuk membuka modal
         window.addEventListener('showDeleteModal', function () {
-            const modal = new Modal(document.getElementById('deleteModal'));
-            modal.show(); // Menampilkan modal saat tombol ditekan
+            modal.show();
         });
 
-
-        // Event listener untuk menutup modal dan mereset form ketika tombol close ditekan
-        $('.closeButtonDeleteModal').on('click', function () {
-            const modal = new Modal(document.getElementById('deleteModal'));
-            modal.hide(); // Menutup modal
-
+        // Event untuk menutup modal
+        window.addEventListener('deleteSuccess', function () {
+            modal.hide();
         });
 
+        // Tombol close modal
+        document.querySelectorAll('.closeButtonDeleteModal').forEach(button => {
+            button.addEventListener('click', function () {
+                modal.hide();
+            });
+        });
     });
-
 </script>
+
+
 
 {{-- Sweet alert,added success --}}
 <script>
