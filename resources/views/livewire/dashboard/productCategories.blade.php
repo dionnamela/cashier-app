@@ -64,10 +64,23 @@
                                         placeholder="Search" />
                                 </div>
                             </form>
+                            <a wire:loading wire:target='search' class="text-secondary text-sm mb-2">
+                                Mencari...
+                                <svg aria-hidden="true" role="status"
+                                    class="inline w-4 h-4 me-3 text-gray-800 animate-spin" viewBox="0 0 100 101"
+                                    fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                        fill="#E5E7EB" />
+                                    <path
+                                        d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                        fill="currentColor" />
+                                </svg>
+                            </a>
                         </div>
                     </div>
                 </div>
-                <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                <div wire:init='loadInitialProducts' class="relative overflow-x-auto shadow-md sm:rounded-lg">
 
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-500 text-white">
@@ -79,37 +92,88 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($productCategories as $category)
-                                <tr
-                                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                    <th scope="row"
-                                        class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {{ $category->name }}
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        {{ $category->created_at->format('d M Y H:i:s') }}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        {{ $category->updated_at->format('d M Y H:i:s') }}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <button type="button" wire:click="productEdit({{ $category }})"
-                                            data-modal-target="editModal" data-modal-toggle="editModal"
-                                            class="text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 text-center me-2 mb-2 dark:border-green-500 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-800">Edit</button>
+                            @if (!$loaded)
+                                @for ($i = 0; $i < 8; $i++)
+                                    <tr
+                                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                        <td class="px-6 py-4">
+                                            <div class="skeleton skeleton-text w-24"></div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="skeleton skeleton-text w-24"></div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="skeleton skeleton-text w-24"></div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="skeleton skeleton-rect w-24"></div>
+                                        </td>
+                                    </tr>
+                                @endfor
+                            @else
+                                @foreach ($productCategories as $category)
+                                    <tr
+                                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                        <th scope="row"
+                                            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            {{ $category->name }}
+                                        </th>
+                                        <td class="px-6 py-4">
+                                            {{ $category->created_at->format('d M Y H:i:s') }}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{ $category->updated_at->format('d M Y H:i:s') }}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div>
+                                                <button type="button" wire:click="productEdit({{ $category->id }})"
+                                                    data-modal-target="editModal" data-modal-toggle="editModal"
+                                                    class="mb-2 bg-green-100 hover:bg-green-200 text-green-800 text-xs font-semibold me-2 px-2.5 py-0.5 rounded  border border-green-400 inline-flex items-center justify-center">Ubah</button>
+                                            </div>
+                                            <div>
+                                                <button type="button"
+                                                    wire:click="deleteConfirmation({{ $category->id }})"
+                                                    class="mb-2 bg-red-100 hover:bg-red-200 text-red-800 text-xs font-semibold me-2 px-2.5 py-0.5 rounded border border-red-400 inline-flex items-center justify-center">
+                                                    Hapus
+                                                </button>
+                                            </div>
 
-                                        <button type="button" wire:click="deleteConfirmation({{ $category->id }})"
-                                            class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-xs px-3 py-1.5 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-800">
-                                            hapus
-                                        </button>
 
 
-                                    </td>
-                                </tr>
-                            @endforeach
+
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>
+                {{-- Tombol Load More --}}
+                @if ($productCategories->count() >= $limit && $totalProductCategories > $limit)
+                    <div class="mt-4 mb-2 flex justify-center">
+                        <!-- Tombol "Tampilkan Lebih" (akan hilang saat loading) -->
+                        <button wire:click="loadMore"
+                            class="bg-gray-800 text-white px-6 py-2 rounded-full shadow-md hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-400 focus:ring-opacity-50"
+                            wire:loading.remove wire:target="loadMore">
+                            Tampilkan Lebih
+                        </button>
 
+                        <!-- Tombol Loading (hanya muncul saat loading) -->
+                        <button
+                            class="mb-5 bg-gray-800 text-white px-6 py-2 rounded-full shadow-md cursor-not-allowed focus:outline-none focus:ring focus:ring-gray-400 focus:ring-opacity-50"
+                            type="button" disabled wire:loading wire:target="loadMore">
+                            Memuat..
+                            <svg class="inline w-5 h-5 text-white animate-spin ml-2" xmlns="http://www.w3.org/2000/svg"
+                                fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4">
+                                </circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8v4a4 4 0 100 8v4a8 8 0 01-8-8z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                @endif
             </div>
         </div>
 
@@ -127,7 +191,7 @@
                         </h3>
                         <button type="button"
                             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                            data-modal-toggle="defaultModal">
+                            data-modal-toggle="defaultModal" id="closeModal">
                             <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd"
@@ -155,15 +219,24 @@
                             </div>
                         </div>
                         <!-- Tombol Simpan -->
-                        <button type="submit"
-                            class="text-white inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                            <span wire:loading.remove wire:target="store">Simpan</span>
-                            <span wire:loading wire:target="store" class="flex items-center space-x-2">
-                                <!-- Icon Spinner -->
-                                <i class="fas fa-circle-notch fa-spin"></i>
-                                <span>Memproses...</span>
-                            </span>
-                        </button>
+                        <div class="flex items-center justify-center">
+                            <button wire:loading.remove wire:target='store' type="submit"
+                                class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                                Simpan
+                            </button>
+                            <button disabled wire:loading wire:target='store'
+                                class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                                Menyimpan..
+                                <svg class="inline w-5 h-5 text-white animate-spin ml-2"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10"
+                                        stroke="currentColor" stroke-width="4">
+                                    </circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                        d="M4 12a8 8 0 018-8v4a4 4 0 100 8v4a8 8 0 01-8-8z"></path>
+                                </svg>
+                            </button>
+                        </div>
 
 
                     </form>
@@ -183,7 +256,7 @@
                         </h3>
                         <button type="button"
                             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                            data-modal-toggle="editModal">
+                            data-modal-toggle="editModal" id="closeModalEdit">
                             <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd"
@@ -211,15 +284,24 @@
                             </div>
                         </div>
                         <!-- Tombol Simpan -->
-                        <button type="submit"
-                            class="text-white inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                            <span wire:loading.remove wire:target="update">Simpan</span>
-                            <span wire:loading wire:target="update" class="flex items-center space-x-2">
-                                <!-- Icon Spinner -->
-                                <i class="fas fa-circle-notch fa-spin"></i>
-                                <span>Memproses...</span>
-                            </span>
-                        </button>
+                        <div class="flex items-center justify-center">
+                            <button wire:loading.remove wire:target='update' type="submit"
+                                class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                                Simpan
+                            </button>
+                            <button disabled wire:loading wire:target='update'
+                                class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                                Menyimpan..
+                                <svg class="inline w-5 h-5 text-white animate-spin ml-2"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10"
+                                        stroke="currentColor" stroke-width="4">
+                                    </circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                        d="M4 12a8 8 0 018-8v4a4 4 0 100 8v4a8 8 0 01-8-8z"></path>
+                                </svg>
+                            </button>
+                        </div>
 
 
                     </form>
@@ -227,75 +309,87 @@
             </div>
         </div>
 
-        <script>
-            // Menangani pembukaan modal
-            window.addEventListener('openModal', () => {
-                const modal = document.getElementById('editModal');
-                modal.classList.remove('hidden');
-            });
 
-            // Menangani sukses update kategori
+        <script>
+            $('#defaultModalButton').on('click', function() {
+                const modalElement = document.getElementById('defaultModal');
+                if (modalElement) {
+                    const modal = new Modal(modalElement);
+                    modal.show(); // Membuka modal
+                }
+                $('#closeModal').on('click', function() {
+                    const modalElement = document.getElementById('defaultModal');
+                    if (modalElement) {
+                        const modal = new Modal(modalElement);
+                        modal.hide(); // Menutup modal
+                    }
+
+                });
+            });
+        </script>
+
+        <script>
             window.addEventListener('updatedSuccess', () => {
                 const modal = document.getElementById('editModal');
                 const modalCloseButton = modal.querySelector('[data-modal-toggle="editModal"]');
                 modalCloseButton.click();
 
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Sukses!',
-                    text: 'Kategori produk berhasil diperbarui.',
-                    showConfirmButton: true,
-                    confirmButtonText: 'Tutup',
-                    timer: 2500,
-                    customClass: {
-                        confirmButton: 'bg-blue-500 text-white hover:bg-blue-600 focus:ring-blue-500'
-                    }
-                });
+
             });
         </script>
 
         <script>
-            Livewire.on('addedSuccess', () => {
-                // Menutup modal dengan id 'defaultModal'
+            window.addEventListener('addedSuccess', () => {
                 const modal = document.getElementById('defaultModal');
                 const modalCloseButton = modal.querySelector('[data-modal-toggle="defaultModal"]');
                 modalCloseButton.click();
 
-                // Menampilkan SweetAlert setelah modal ditutup
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Sukses!',
-                    text: 'Kategori produk baru telah berhasil ditambahkan.',
-                    showConfirmButton: true,
-                    confirmButtonText: 'Tutup',
-                    timer: 1500,
-                    customClass: {
-                        confirmButton: 'bg-blue-500 text-white hover:bg-blue-600 focus:ring-blue-500'
-                    }
-                });
+
             });
         </script>
         <script>
-            Livewire.on('upatedSuccess', () => {
-                // Menutup modal dengan id 'defaultModal'
-                const modal = document.getElementById('editModal');
-                const modalCloseButton = modal.querySelector('[data-modal-toggle="editModal"]');
-                modalCloseButton.click();
-
-                // Menampilkan SweetAlert setelah modal ditutup
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Sukses!',
-                    text: 'Kategori produk baru telah berhasil ditambahkan.',
-                    showConfirmButton: true,
-                    confirmButtonText: 'Tutup',
-                    timer: 1500,
-                    customClass: {
-                        confirmButton: 'bg-blue-500 text-white hover:bg-blue-600 focus:ring-blue-500'
-                    }
+            $(document).ready(function() {
+                window.addEventListener('addedSuccess', function(event) {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        }
+                    });
+                    Toast.fire({
+                        icon: "success",
+                        title: "Kategori Produk berhasil ditambahkan"
+                    });
                 });
-            });
+            })
         </script>
+        <script>
+            $(document).ready(function() {
+                window.addEventListener('updatedSuccess', function(event) {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        }
+                    });
+                    Toast.fire({
+                        icon: "success",
+                        title: "Produk berhasil diperbarui"
+                    });
+                });
+            })
+        </script>
+
         <script>
             window.addEventListener('show-delete-confirmation', event => {
                 Swal.fire({
@@ -313,15 +407,37 @@
                     }
                 });
             });
-
-            window.addEventListener('categoriesDeleted', event => {
-                Swal.fire({
-                    title: 'Berhasil',
-                    text: 'Kategori produk berhasil dihapus.',
-                    icon: 'success',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#1E40AF', // Mengatur warna tombol menjadi biru
+        </script>
+        <script>
+            $(document).ready(function() {
+                window.addEventListener('categoriesDeleted', function(event) {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        }
+                    });
+                    Toast.fire({
+                        icon: "success",
+                        title: "Kategori Produk Telah Dihapus"
+                    });
                 });
+            })
+        </script>
+        <script>
+            window.addEventListener('showEditModal', function() {
+                const modal = new Modal(document.getElementById('editModal'));
+                modal.show(); // Menampilkan modal saat tombol ditekan
+            });
+            $('#closeModalEdit').on('click', function() {
+                const modal = new Modal(document.getElementById('editModal'));
+                modal.hide(); // Menutup modal
+
             });
         </script>
 
