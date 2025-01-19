@@ -3,30 +3,52 @@
 namespace App\Livewire\Dashboard;
 
 use Livewire\Component;
-use App\Models\ProductCategories as ModelProductCategories;
+use Livewire\Attributes\Url;
 use RealRashid\SweetAlert\Facades\Alert;
+use App\Models\ProductCategories as ModelProductCategories;
 
 class ProductCategories extends Component
 {
-    public $productCategories;
+    public $productCategories, $totalProductCategories;
     public $categoryId; // ID kategori yang akan diedit
     public $editName; // Nama kategori yang akan diedit
     public $name; // Nama kategori yang akan diedit
-    public $isLoading = true;
-    protected $listeners = ['deleteConfirmed' => 'deleteCategory'];
+    public $loaded = false;
+    protected $listeners = ['deleteConfirmed' => 'deleteCategory', 'productUpdated' => 'loadInitialProducts', 'categoriesDeleted' => 'loadInitialProducts'];
+    #[Url()]
     public $search = '';
+    public $limit = 8;
 
 
     public function mount()
     {
-        // Simulasikan loading data
-        $this->productCategories = ModelProductCategories::all();
-        $this->isLoading = false;
+        $this->totalProductCategories = ModelProductCategories::count();
+        $this->productCategories = collect();
+    }
+
+    public function loadMore()
+    {
+        $this->limit += 8;
+        $this->loadInitialProducts();
+    }
+
+    public function updatingSearch()
+    {
+        $this->limit = 8;
+    }
+
+    public function loadInitialProducts()
+    {
+        $this->loaded = true;
+        $this->productCategories = ModelProductCategories::where('name', 'like', '%' . $this->search . '%')
+            ->latest()
+            ->take($this->limit)
+            ->get();
     }
 
     public function updatedSearch()
     {
-        $this->productCategories = ModelProductCategories::where('name', 'like', '%' . $this->search . '%')->get();
+        $this->loadInitialProducts();
     }
 
     public function store()
@@ -50,16 +72,19 @@ class ProductCategories extends Component
         $this->reset('name');
 
         // Merefresh data kategori produk
-        $this->productCategories = ModelProductCategories::all();
+        $this->productCategories = ModelProductCategories::latest()->get();
 
         // Dispatch custom event untuk memicu aksi JavaScript
         $this->dispatch('addedSuccess');
     }
-    public function productEdit($category)
+    public function productEdit($id)
     {
         // dd($category);
-        $this->categoryId = $category['id'];
-        $this->editName = $category['name'];
+        $productCategories = ModelProductCategories::where('id', $id)->first();
+        $this->categoryId = $productCategories->id;
+        $this->editName = $productCategories->name;
+
+        $this->dispatch('showEditModal');
     }
     public function update()
     {
@@ -82,7 +107,7 @@ class ProductCategories extends Component
         $this->reset('editName');
 
         // Merefresh data kategori produk
-        $this->productCategories = ModelProductCategories::all();
+        $this->productCategories = ModelProductCategories::latest()->get();
 
         // Dispatch custom event untuk memicu aksi JavaScript
         $this->dispatch('updatedSuccess');
@@ -102,7 +127,8 @@ class ProductCategories extends Component
 
         $categories = ModelProductCategories::where('id', $this->delete_id)->first();
         $categories->delete();
-        $this->productCategories = ModelProductCategories::all();
+        $this->productCategories = ModelProductCategories::latest()->get();
+
         $this->dispatch('categoriesDeleted');
     }
 
