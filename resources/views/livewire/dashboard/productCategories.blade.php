@@ -38,7 +38,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 {{-- Button Add & Search --}}
 
-                <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
+                <div class="relative bg-white shadow-md sm:rounded-lg">
                     <div
                         class="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
                         <div class="w-full md:w-1/2">
@@ -95,27 +95,28 @@
                             @if (!$loaded)
                                 @for ($i = 0; $i < 8; $i++)
                                     <tr
-                                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                        class="bg-white border-b hover:bg-gray-50">
                                         <td class="px-6 py-4">
-                                            <div class="skeleton skeleton-text w-24"></div>
+                                            <div class="h-4 bg-gray-300 rounded animate-pulse"></div>
                                         </td>
                                         <td class="px-6 py-4">
-                                            <div class="skeleton skeleton-text w-24"></div>
+                                            <div class="h-4 bg-gray-300 rounded animate-pulse"></div>
                                         </td>
                                         <td class="px-6 py-4">
-                                            <div class="skeleton skeleton-text w-24"></div>
+                                            <div class="h-4 bg-gray-300 rounded animate-pulse"></div>
                                         </td>
                                         <td class="px-6 py-4">
-                                            <div class="skeleton skeleton-rect w-24"></div>
+                                            <div class="h-4 mb-2 w-10 bg-gray-300 rounded animate-pulse"></div>
+                                            <div class="h-4 mb-2 w-10 bg-gray-300 rounded animate-pulse"></div>
                                         </td>
                                     </tr>
                                 @endfor
                             @else
                                 @foreach ($productCategories as $category)
                                     <tr
-                                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                        class="bg-white border-b hover:bg-gray-50">
                                         <th scope="row"
-                                            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                             {{ $category->name }}
                                         </th>
                                         <td class="px-6 py-4">
@@ -182,15 +183,15 @@
             class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full">
             <div class="relative p-4 w-full max-w-2xl h-full md:h-auto">
                 <!-- Modal content -->
-                <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+                <div class="relative p-4 bg-white rounded-lg shadow sm:p-5">
                     <!-- Modal header -->
                     <div
-                        class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                        class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5">
+                        <h3 class="text-lg font-semibold text-gray-900">
                             Tambah Kategori Produk
                         </h3>
                         <button type="button"
-                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
                             data-modal-toggle="defaultModal" id="closeModal">
                             <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -206,10 +207,10 @@
                         <div class="grid gap-4 mb-4 sm:grid-cols-2">
                             <div class="sm:col-span-2">
                                 <label for="description"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama
+                                    class="block mb-2 text-sm font-medium text-gray-900">Nama
                                     Kategori</label>
                                 <input type="text" name="name" id="name"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                     placeholder="Masukan nama kategori" wire:model="name">
 
                                 <!-- Display error message for 'name' -->
@@ -221,11 +222,11 @@
                         <!-- Tombol Simpan -->
                         <div class="flex items-center justify-center">
                             <button wire:loading.remove wire:target='store' type="submit"
-                                class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                                class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
                                 Simpan
                             </button>
                             <button disabled wire:loading wire:target='store'
-                                class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                                class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
                                 Menyimpan..
                                 <svg class="inline w-5 h-5 text-white animate-spin ml-2"
                                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -243,19 +244,21 @@
                 </div>
             </div>
         </div>
+        
+        {{-- Modal Edit --}}
         <div wire:ignore.self id="editModal" tabindex="-1" aria-hidden="true"
             class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full">
             <div class="relative p-4 w-full max-w-2xl h-full md:h-auto">
                 <!-- Modal content -->
-                <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+                <div class="relative p-4 bg-white rounded-lg shadow sm:p-5">
                     <!-- Modal header -->
                     <div
-                        class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                        class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5">
+                        <h3 class="text-lg font-semibold text-gray-900">
                             Edit Kategori Produk
                         </h3>
                         <button type="button"
-                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
                             data-modal-toggle="editModal" id="closeModalEdit">
                             <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -271,10 +274,10 @@
                         <div class="grid gap-4 mb-4 sm:grid-cols-2">
                             <div class="sm:col-span-2">
                                 <label for="description"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama
+                                    class="block mb-2 text-sm font-medium text-gray-900">Nama
                                     Kategori</label>
                                 <input type="text" name="editName" id="editName"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                     placeholder="Masukan nama kategori" wire:model="editName">
 
                                 <!-- Display error message for 'name' -->
@@ -286,11 +289,11 @@
                         <!-- Tombol Simpan -->
                         <div class="flex items-center justify-center">
                             <button wire:loading.remove wire:target='update' type="submit"
-                                class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                                class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
                                 Simpan
                             </button>
                             <button disabled wire:loading wire:target='update'
-                                class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                                class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
                                 Menyimpan..
                                 <svg class="inline w-5 h-5 text-white animate-spin ml-2"
                                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -347,6 +350,7 @@
 
             });
         </script>
+
         <script>
             $(document).ready(function() {
                 window.addEventListener('addedSuccess', function(event) {
@@ -368,6 +372,7 @@
                 });
             })
         </script>
+
         <script>
             $(document).ready(function() {
                 window.addEventListener('updatedSuccess', function(event) {
@@ -384,7 +389,7 @@
                     });
                     Toast.fire({
                         icon: "success",
-                        title: "Produk berhasil diperbarui"
+                        title: "Kategori Produk berhasil diperbarui"
                     });
                 });
             })
@@ -408,6 +413,7 @@
                 });
             });
         </script>
+
         <script>
             $(document).ready(function() {
                 window.addEventListener('categoriesDeleted', function(event) {
@@ -429,6 +435,7 @@
                 });
             })
         </script>
+
         <script>
             window.addEventListener('showEditModal', function() {
                 const modal = new Modal(document.getElementById('editModal'));
