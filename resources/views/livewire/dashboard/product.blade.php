@@ -714,18 +714,7 @@
             existingImage: @entangle('currentImage') ?? null,  // Bind gambar yang sudah ada
             hasImage: false,
 
-            init() {
-                // Jika ada gambar yang sudah ada (misalnya saat edit), tampilkan gambar tersebut
-                if (this.existingImage) {
-                    this.hasImage = true;
-                }
-
-                // Listener untuk event updatedSuccess dari Livewire
-                Livewire.on('updatedSuccess', () => {
-                    this.clearImagePreview(); // Panggil untuk clear preview
-                    this.existingImage = @this.get('currentImage'); // Sinkronkan gambar baru dari Livewire
-                });
-            },
+            
 
             previewImage(event) {
                 const file = event.target.files[0];
@@ -775,13 +764,39 @@
                 }, 200);
             },
 
-            // Method to clear image preview
-            clearImagePreview() {
+            resetPreview() {
                 this.imagePreview = null;
                 this.fileName = '';
                 this.fileSize = '';
-                this.hasImage = false;
-            }
+                this.error = null;
+                this.uploading = false;
+                this.progress = 0;
+                
+                // Also reset the file input
+                const fileInput = document.getElementById('image');
+                if (fileInput) {
+                    fileInput.value = '';
+                }
+            },
+
+
+            init() {
+                // Jika ada gambar yang sudah ada (misalnya saat edit), tampilkan gambar tersebut
+                if (this.existingImage) {
+                    this.hasImage = true;
+                }
+
+                 // Listener untuk event addedSuccess dari Livewire
+                 Livewire.on('addedSuccess', () => {
+                    this.resetPreview(); // Panggil untuk clear preview
+                   
+                });
+                // Listener untuk event updatedSuccess dari Livewire
+                Livewire.on('updatedSuccess', () => {
+                    this.resetPreview(); // Panggil untuk clear preview
+                    this.existingImage = @this.get('currentImage'); // Sinkronkan gambar baru dari Livewire
+                });
+            },
         };
     }
 </script>
