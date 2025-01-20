@@ -93,34 +93,33 @@
                             @if (!$loaded)
                             {{-- Tampilkan skeleton saat data belum dimuat --}}
                             @for ($i = 0; $i < 8; $i++) <tr
-                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                class="bg-white border-b">
                                 <td class="px-6 py-4">
-                                    <div class="w-10 h-10 bg-gray-300 rounded-full dark:bg-gray-600 animate-pulse">
+                                    <div class="w-10 h-10 bg-gray-300 rounded-full animate-pulse">
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <div class="h-4 bg-gray-300 rounded dark:bg-gray-600 animate-pulse"></div>
+                                    <div class="h-4 bg-gray-300 rounded animate-pulse"></div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <div class="h-4 bg-gray-300 rounded dark:bg-gray-600 animate-pulse"></div>
+                                    <div class="h-4 bg-gray-300 rounded animate-pulse"></div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <div class="h-4 bg-gray-300 rounded dark:bg-gray-600 animate-pulse"></div>
+                                    <div class="h-4 bg-gray-300 rounded animate-pulse"></div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <div class="h-4 bg-gray-300 rounded dark:bg-gray-600 animate-pulse"></div>
+                                    <div class="h-4 bg-gray-300 rounded animate-pulse"></div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <div class="h-4 bg-gray-300 rounded dark:bg-gray-600 animate-pulse"></div>
+                                    <div class="h-4 bg-gray-300 rounded animate-pulse"></div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <div class="h-4 w-10 bg-gray-300 rounded dark:bg-gray-600 animate-pulse"></div>
+                                    <div class="h-4 w-10 bg-gray-300 rounded animate-pulse"></div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <div class="h-4 mb-2 w-10 bg-gray-300 rounded dark:bg-gray-600 animate-pulse"></div>
-                                    <div class="h-4 mb-2 w-10 bg-gray-300 rounded dark:bg-gray-600 animate-pulse"></div>
-                                    <div class="h-4 w-10 bg-gray-300 rounded dark:bg-gray-600 animate-pulse"></div>
-
+                                    <div class="h-4 mb-2 w-10 bg-gray-300 rounded animate-pulse"></div>
+                                    <div class="h-4 mb-2 w-10 bg-gray-300 rounded animate-pulse"></div>
+                                    <div class="h-4 w-10 bg-gray-300 rounded animate-pulse"></div>
                                 </td>
                                 </tr>
                                 @endfor
@@ -128,59 +127,50 @@
                                 {{-- Tampilkan data asli setelah dimuat --}}
                                 @forelse ($products as $product)
                                 <tr class="bg-white border-b hover:bg-gray-300">
-                                    {{-- <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap">
-                                        <div class="lazy-placeholder-products flex items-center px-6 py-4 text-gray-900"
-                                        x-data="{ imageSrc: null }"
-                                        x-init="setTimeout(() => { imageSrc = $el.querySelector('img').dataset.src }, 500)">
-                                        <img :src="imageSrc" 
-                                             data-src="{{ asset('storage/' . $product->image) }}"
-                                    class="lazy-img w-10 h-10 rounded-full">
-                </div>
-                </th> --}}
 
-                <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap">
-                    <div class="image flex items-center px-6 py-4 text-gray-900">
-                        <img src="{{ asset('storage/' . $product->image) }}" class="lazy-img w-10 h-10 rounded-full">
-                    </div>
-                </th>
-                <td scope="row" class="px-6 py-4 font-medium text-gray-900 ">
-                    {{ $product->name }}
-                </td>
-                <td class="px-6 py-4">{{ $product->sku }}</td>
-                <td class="px-6 py-4">Kategori disini</td>
-                <td class="px-6 py-4">Rp{{ $product->price }}</td>
-                <td class="px-6 py-4">{{ $product->stock }}</td>
-                <td class="px-6 py-4">{{ $product->unit }}</td>
-                <td class="px-6 py-4">
-                    <div>
-                        <button wire:click="editModal({{ $product->id }})"
-                            class="mb-2 bg-green-100 hover:bg-green-200 text-green-800 text-xs font-semibold me-2 px-2.5 py-0.5 rounded  border border-green-400 inline-flex items-center justify-center">
-                            Ubah</button>
-                    </div>
-                    <div>
-                        <button wire:click="deleteConfirmation({{ $product->id }})"
-                            class="mb-2 bg-red-100 hover:bg-red-200 text-red-800 text-xs font-semibold me-2 px-2.5 py-0.5 rounded border border-red-400 inline-flex items-center justify-center">
-                            Delete
-                        </button>
-                    </div>
-                    <div>
-                        <button
-                            class="bg-blue-100 hover:bg-blue-200 text-blue-800 text-xs font-semibold me-2 px-2.5 py-0.5 rounded border border-blue-400 inline-flex items-center justify-center">
-                            Detail
-                        </button>
-                    </div>
-                </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="8" class="text-center align-middle h-20">
-                        Tidak ada data ditemukan!
-                    </td>
-                </tr>
-                @endforelse
-                @endif
-                </tbody>
-                </table>
+                                <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap">
+                                    <div class="image flex items-center px-6 py-4 text-gray-900">
+                                        <img src="{{ asset('storage/' . $product->image) }}" class="lazy-img w-10 h-10 rounded-full">
+                                    </div>
+                                </th>
+                                <td scope="row" class="px-6 py-4 font-medium text-gray-900 ">
+                                    {{ $product->name }}
+                                </td>
+                                <td class="px-6 py-4">{{ $product->sku }}</td>
+                                <td class="px-6 py-4">Kategori disini</td>
+                                <td class="px-6 py-4">Rp{{ $product->price }}</td>
+                                <td class="px-6 py-4">{{ $product->stock }}</td>
+                                <td class="px-6 py-4">{{ $product->unit }}</td>
+                                <td class="px-6 py-4">
+                                    <div>
+                                        <button wire:click="editModal({{ $product->id }})"
+                                            class="mb-2 bg-green-100 hover:bg-green-200 text-green-800 text-xs font-semibold me-2 px-2.5 py-0.5 rounded  border border-green-400 inline-flex items-center justify-center">
+                                            Ubah</button>
+                                    </div>
+                                    <div>
+                                        <button wire:click="deleteConfirmation({{ $product->id }})"
+                                            class="mb-2 bg-red-100 hover:bg-red-200 text-red-800 text-xs font-semibold me-2 px-2.5 py-0.5 rounded border border-red-400 inline-flex items-center justify-center">
+                                            Delete
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <button
+                                            class="bg-blue-100 hover:bg-blue-200 text-blue-800 text-xs font-semibold me-2 px-2.5 py-0.5 rounded border border-blue-400 inline-flex items-center justify-center">
+                                            Detail
+                                        </button>
+                                    </div>
+                                </td>
+                                </tr>
+                            @empty
+                            <tr>
+                                <td colspan="8" class="text-center align-middle h-20">
+                                    Tidak ada data ditemukan!
+                                </td>
+                            </tr>
+                            @endforelse
+                            @endif
+                            </tbody>
+                            </table>
 
 
             </div>
